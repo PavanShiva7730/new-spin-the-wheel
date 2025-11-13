@@ -1,63 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Spin & Win Coaching @₹1</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<title>Spin & Win Coaching @₹1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f5f7fa;
-      margin: 0;
-      padding: 20px;
-      text-align: center;
-    }
+<style>
+body {
+  font-family: system-ui, sans-serif;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+#tb-spin .tb-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+  max-width: 600px;
+  margin: auto;
+}
+#tb-spin .tb-title {
+  color: #0a5fff;
+  font: 700 28px/1.2 system-ui;
+  margin: 4px 0 6px;
+}
+#tb-spin .tb-sub {
+  color: #64748b;
+  font: 500 15px/1.6 system-ui;
+}
+#tb-spin .tb-wheel-wrap {
+  position: relative;
+  width: 520px;
+  height: 520px;
+  margin: 20px auto;
+}
+#tb-spin canvas {
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 8px 26px rgba(0, 0, 0, 0.15));
+}
+#tb-spin .tb-pointer {
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 35px solid #e11d48;
+  z-index: 3;
+}
+#tb-spin .tb-btn {
+  background: linear-gradient(135deg, #0a5fff 0%, #0047cc 100%);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 38px;
+  font: 800 18px/1 system-ui;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 8px 22px rgba(10, 95, 255, 0.35);
+}
 
-    #tb-spin .tb-card {
-      background:#fff;border-radius:20px;padding:28px 22px;
-      box-shadow:0 18px 50px rgba(0,0,0,.12);
-      max-width: 600px;
-      margin: auto;
-    }
-
-    #tb-spin .tb-title {
-      color:#0A5FFF;font:700 28px/1.2 system-ui; margin:4px 0 6px;
-    }
-
-    #tb-spin .tb-sub {
-      color:#64748B;font:500 15px/1.6 system-ui;
-    }
-
-    #tb-spin .tb-wheel-wrap{
-      position:relative;
-      width:520px;
-      height:520px;
-      margin:20px auto;
-    }
-
-    #tb-spin canvas{
-      display:block;margin:0 auto;
-      filter:drop-shadow(0 8px 26px rgba(0,0,0,.15));
-    }
-
-    #tb-spin .tb-pointer{
-      position:absolute;left:50%;top:-18px;transform:translateX(-50%);
-      width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:35px solid #e11d48;
-      z-index:3;
-    }
-
-    #tb-spin .tb-btn {
-      background:linear-gradient(135deg,#0A5FFF 0%,#0047CC 100%);
-      color:#fff;border:none;border-radius:999px;padding:14px 38px;
-      font:800 18px/1 system-ui;cursor:pointer;
-      box-shadow:0 8px 22px rgba(10,95,255,.35);
-      transition:.15s ease;
-      margin-top:20px;
-    }
-
-    #tb-spin .tb-btn:hover { transform:translateY(-2px); }
-  </style>
+/* POPUP */
+#tb-pop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+#tb-pop.show {
+  display: flex;
+}
+#tb-pop .tb-pop-card {
+  width: min(460px, 92vw);
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 22px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+}
+.tb-x {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font: 700 22px system-ui;
+  cursor: pointer;
+}
+.tb-pop-title {
+  font: 800 26px system-ui;
+  color: #0a5fff;
+}
+.tb-reward {
+  background: #04c46b;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font: 800 18px system-ui;
+  margin: 14px 0;
+}
+.tb-desc {
+  font: 500 15px/1.6 system-ui;
+  color: #475569;
+}
+.tb-cta {
+  display: inline-block;
+  background: #04c46b;
+  color: #fff;
+  text-decoration: none;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font: 800 16px system-ui;
+  box-shadow: 0 10px 24px rgba(4, 196, 107, 0.4);
+}
+</style>
 </head>
 
 <body>
@@ -74,26 +140,51 @@
 
     <button id="tb-spin-btn" class="tb-btn">🚀 Spin Now</button>
 
-    <div id="tb-result" class="tb-result"></div>
+    <div id="tb-result"></div>
   </div>
 </div>
 
-<audio id="spin-sound" preload="auto"
-  src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-wheel-spin-2014.mp3"></audio>
+<!-- POPUP -->
+<div id="tb-pop">
+  <div class="tb-pop-card">
+    <button class="tb-x">✖</button>
+    <div style="font-size: 64px">🎉</div>
 
-<audio id="win-sound" preload="auto"
-  src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2018.mp3"></audio>
+    <div class="tb-pop-title">Congratulations!</div>
+
+    <div id="tb-reward-text" class="tb-reward">You Won:</div>
+
+    <div class="tb-desc">Download the Testbook App to claim your prize.</div>
+
+    <a
+      class="tb-cta"
+      href="https://testbook.com/super-pass-live-coaching"
+      target="_blank"
+      >📲 Start Trial</a
+    >
+  </div>
+</div>
+
+<audio
+  id="spin-sound"
+  preload="auto"
+  src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-wheel-spin-2014.mp3"
+></audio>
+<audio
+  id="win-sound"
+  preload="auto"
+  src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2018.mp3"
+></audio>
 
 <script>
 (function () {
-
   const SEGMENTS = [
     { text: "🎓 Any Railway Exams", color: "#8B5CF6" },
     { text: "🎁 Any SSC Exams", color: "#EC4899" },
     { text: "📚 Any Teaching Recruitment", color: "#F59E0B" },
     { text: "💰 Any Bihar Exam", color: "#10B981" },
     { text: "✨ Any Banking Exam", color: "#3B82F6" },
-    { text: "🙏 Try Again", color: "#9CA3AF" }
+    { text: "🙏 Try Again", color: "#9CA3AF" },
   ];
 
   const canvas = document.getElementById("tb-wheel");
@@ -103,7 +194,7 @@
   const radius = 220;
   const cx = size / 2;
   const cy = size / 2;
-  const slice = 2 * Math.PI / SEGMENTS.length;
+  const slice = (2 * Math.PI) / SEGMENTS.length;
 
   function draw(rotation = 0) {
     ctx.clearRect(0, 0, size, size);
@@ -112,79 +203,99 @@
     ctx.translate(cx, cy);
     ctx.rotate(rotation);
 
-    for (let i = 0; i < SEGMENTS.length; i++) {
-
+    SEGMENTS.forEach((seg, i) => {
       const start = i * slice;
-      const end = start + slice;
 
       ctx.beginPath();
       ctx.moveTo(0, 0);
-      ctx.arc(0, 0, radius, start, end);
+      ctx.arc(0, 0, radius, start, start + slice);
       ctx.closePath();
-      ctx.fillStyle = SEGMENTS[i].color;
+      ctx.fillStyle = seg.color;
       ctx.fill();
       ctx.strokeStyle = "#fff";
       ctx.stroke();
 
-      // TEXT FIX: upright & centered
+      // TEXT FIXED (upright + inside)
       ctx.save();
       ctx.rotate(start + slice / 2);
+      ctx.rotate(-Math.PI / 2);
 
       ctx.font = "bold 18px sans-serif";
       ctx.fillStyle = "#fff";
       ctx.textAlign = "center";
 
-      // Position text INSIDE neatly
-      const textX = radius * 0.60;   // inside correctly
-      const textY = 0;
+      const words = seg.text.split(" ");
+      const x = radius * 0.55;
 
-      // Split into 2 lines if needed
-      const lines = SEGMENTS[i].text.split(" ");
-
-      if (lines.length <= 2) {
-        ctx.fillText(SEGMENTS[i].text, textX, textY);
+      if (words.length <= 2) {
+        ctx.fillText(seg.text, x, 6);
       } else {
-        ctx.fillText(lines.slice(0,2).join(" "), textX, textY - 10);
-        ctx.fillText(lines.slice(2).join(" "), textX, textY + 14);
+        ctx.fillText(words.slice(0, 2).join(" "), x, -6);
+        ctx.fillText(words.slice(2).join(" "), x, 18);
       }
 
       ctx.restore();
-    }
+    });
 
     ctx.restore();
   }
 
-  // SPIN PHYSICS
-  let rotation = 0, velocity = 0, spinning = false;
+  let rotation = 0,
+    velocity = 0,
+    spinning = false;
 
   function animate() {
     if (!spinning) return;
-    rotation += velocity * Math.PI / 180;
+    rotation += (velocity * Math.PI) / 180;
     velocity *= 0.985;
 
     if (velocity < 0.02) {
       spinning = false;
+      showResult();
     } else {
       requestAnimationFrame(animate);
     }
+
     draw(rotation);
   }
 
+  function showResult() {
+    const adjusted = (rotation + Math.PI / 2) % (2 * Math.PI);
+    const index = Math.floor(
+      (2 * Math.PI - adjusted) / slice
+    ) % SEGMENTS.length;
+
+    const prize = SEGMENTS[index].text;
+
+    if (prize.includes("Try Again")) {
+      document.getElementById("tb-result").innerHTML = "🙏 Try Again!";
+      return;
+    }
+
+    document.getElementById("win-sound").play();
+
+    document.getElementById("tb-reward-text").innerHTML =
+      "You Won: " + prize;
+
+    document.getElementById("tb-pop").classList.add("show");
+  }
+
+  document.querySelector(".tb-x").onclick = () =>
+    document.getElementById("tb-pop").classList.remove("show");
+
   document.getElementById("tb-spin-btn").onclick = () => {
     if (spinning) return;
+
     spinning = true;
+    velocity = 45 + Math.random() * 5;
 
     document.getElementById("spin-sound").play();
-
-    velocity = 45 + Math.random() * 5;
 
     requestAnimationFrame(animate);
   };
 
   draw(0);
-
 })();
 </script>
-
 </body>
 </html>
