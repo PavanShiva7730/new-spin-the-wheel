@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spin & Win Coaching @₹1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+    #tb-spin * { box-sizing: border-box; }
+    #tb-spin .tb-card {
+      background:#fff;border-radius:20px;padding:28px 22px;
+      box-shadow:0 18px 50px rgba(0,0,0,.12);
+    }
+    #tb-spin .tb-title {
+      color:#0A5FFF;font:700 28px/1.2 system-ui; margin:4px 0 6px;
+    }
+    #tb-spin .tb-sub {
+      color:#64748B;font:500 15px/1.6 system-ui;
+    }
+    #tb-spin .tb-wheel-wrap{position:relative;width:min(420px,86vw);height:min(420px,86vw);margin:20px auto;}
+    #tb-spin canvas{display:block;margin:0 auto;filter:drop-shadow(0 8px 26px rgba(0,0,0,.15));}
+    #tb-spin .tb-pointer{
+      position:absolute;left:50%;top:-14px;transform:translateX(-50%);
+      width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:32px solid #e11d48;
+      filter:drop-shadow(0 2px 6px rgba(225,29,72,.35));z-index:2;
+    }
+    #tb-spin .tb-btn {
+      background:linear-gradient(135deg,#0A5FFF 0%,#0047CC 100%);
+      color:#fff;border:none;border-radius:999px;padding:14px 38px;
+      font:800 18px/1 system-ui;letter-spacing:.2px;cursor:pointer;
+      box-shadow:0 8px 22px rgba(10,95,255,.35);transition:transform .15s ease,box-shadow .15s ease; margin-top:14px;
+    }
+    #tb-spin .tb-btn:hover:not([disabled]){transform:translateY(-1px);box-shadow:0 10px 28px rgba(10,95,255,.45);}
+    #tb-spin .tb-btn[disabled]{opacity:.55;cursor:not-allowed;}
+    #tb-spin .tb-result{min-height:26px;margin-top:12px;font:700 16px/1.4 system-ui}
+    #tb-spin .tb-pop{display:none;position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.72);
+      align-items:center;justify-content:center;padding:16px;}
+    #tb-spin .tb-pop.show{display:flex;animation:tbFade .25s ease;}
+    #tb-spin .tb-pop-card{
+      width:min(460px,92vw);background:#fff;border-radius:16px;padding:28px 22px;text-align:center;
+      box-shadow:0 20px 60px rgba(0,0,0,.28);position:relative;animation:tbPop .35s cubic-bezier(.2,.8,.2,1);
+    }
+    #tb-spin .tb-x{position:absolute;top:8px;right:10px;border:none;background:transparent;color:#64748B;
+      font:700 20px/1 system-ui;cursor:pointer}
+    #tb-spin .tb-pop-title{color:#0A5FFF;font:800 26px/1.2 system-ui;margin:8px 0}
+    #tb-spin .tb-reward{display:inline-block;background:linear-gradient(135deg,#04C46B 0%,#059669 100%);
+      color:#fff;border-radius:12px;padding:12px 18px;font:800 18px/1.2 system-ui;margin:12px 0;box-shadow:0 6px 18px rgba(4,196,107,.35)}
+    #tb-spin .tb-desc{color:#475569;font:500 15px/1.6 system-ui;margin:10px auto 18px;max-width:36ch}
+    #tb-spin .tb-cta{
+      display:inline-block;background:linear-gradient(135deg,#04C46B 0%,#059669 100%);color:#fff;text-decoration:none;
+      border-radius:12px;padding:14px 22px;font:800 16px/1 system-ui;box-shadow:0 10px 24px rgba(4,196,107,.4);
+    }
+    #tb-spin .tb-cta:hover{filter:brightness(1.05)}
+    #tb-spin .tb-badge{display:inline-block;background:#fef3c7;color:#92400e;border-radius:999px;padding:6px 12px;
+      font:700 12px/1 system-ui;margin-top:10px}
+    @keyframes tbFade{from{opacity:0}to{opacity:1}}
+    @keyframes tbPop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  </style>
+</head>
+
+<body>
+
+<div id="tb-spin">
+  <div class="tb-card">
+    <div class="tb-title">🎡 Spin & Win with Testbook</div>
+    <div class="tb-sub">Spin to win amazing rewards!</div>
+
+    <div class="tb-wheel-wrap">
+      <div class="tb-pointer"></div>
+      <canvas id="tb-wheel" width="420" height="420"></canvas>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <button id="tb-spin-btn" class="tb-btn">🚀 Spin Now</button>
+    </div>
+
+    <div id="tb-result" class="tb-result"></div>
+  </div>
+
+  <!-- Popup -->
+  <div id="tb-pop" class="tb-pop">
+    <div class="tb-pop-card">
+      <button class="tb-x" type="button">✖</button>
+      <div style="font-size:64px;margin-bottom:10px;">🎉</div>
+      <div class="tb-pop-title">Congratulations You Have Won Coaching @1 Rupee!</div>
+      <div id="tb-reward-text" class="tb-reward">✅ Reward</div>
+      <div class="tb-desc">Download the Testbook App to claim your prize.</div>
+      <a class="tb-cta" href="https://testbook.com/super-pass-live-coaching?utm_source=Website&utm_medium=WebsiteOrganic&utm_campaign=SEO" target="_blank">📲 Start Trial</a>
+    </div>
+  </div>
+</div>
+
+<!-- Sounds -->
+<audio id="spin-sound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-wheel-spin-2014.mp3"></audio>
+<audio id="win-sound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2018.mp3"></audio>
+
+<script>
+(function () {
+  const SEGMENTS = [
+    { text: "🎓 Any Railway Exams", color: "#8B5CF6" },
+    { text: "🎁 Any SSC Exams", color: "#EC4899" },
+    { text: "📚 Any Teaching Recruitment Exam", color: "#F59E0B" },
+    { text: "💰 Any Bihar Exam", color: "#10B981" },
+    { text: "✨ Any Banking Exam ", color: "#3B82F6" },
+    { text: "🙏 Try Again", color: "#9CA3AF" }
+  ];
+
+  function run() {
+    const canvas = document.getElementById("tb-wheel"),
+          spinBtn = document.getElementById("tb-spin-btn"),
+          result = document.getElementById("tb-result"),
+          popup = document.getElementById("tb-pop"),
+          rewardText = document.getElementById("tb-reward-text"),
+          closeBtn = document.querySelector(".tb-x"),
+          spinSound = document.getElementById("spin-sound"),
+          winSound = document.getElementById("win-sound");
+
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 340 * dpr;
+    canvas.height = 340 * dpr;
+    ctx.scale(dpr, dpr);
+
+    const size = 340;
+    const cx = size / 2;
+    const radius = 160;
+    const slice = 2 * Math.PI / SEGMENTS.length;
+
+    function draw(rotation = 0) {
+      ctx.clearRect(0, 0, size, size);
+      ctx.save();
+      ctx.translate(cx, cx);
+      ctx.rotate(rotation);
+
+      for (let i = 0; i < SEGMENTS.length; i++) {
+        const start = i * slice, end = start + slice;
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = SEGMENTS[i].color;
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.stroke();
+
+        ctx.save();
+        ctx.rotate(start + slice / 2);
+
+        ctx.fillStyle = "#fff";
+
+        ctx.font = "bold 15px sans-serif";   // 🔥 CHANGED (bigger text)
+
+        const words = SEGMENTS[i].text.split(" ");
+        const lineHeight = 16;
+
+        words.forEach((w, j) => {
+          ctx.fillText(
+            w,
+            radius * 0.78,                      // 🔥 CHANGED (text moved right)
+            -lineHeight * (words.length - j - 1)
+          );
+        });
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+    }
+
+    let rotation = 0, velocity = 0, spinning = false;
+
+    function animate() {
+      if (!spinning) return;
+      rotation += velocity * Math.PI / 180;
+      velocity *= 0.984;
+      if (velocity < 0.02) {
+        spinning = false;
+        finish();
+      } else {
+        requestAnimationFrame(animate);
+      }
+      draw(rotation);
+    }
+
+    function startSpin() {
+      if (spinning) return;
+      spinning = true;
+      spinSound.currentTime = 0;
+      spinSound.play();
+
+      velocity = 45 + Math.random() * 5;
+      spinBtn.disabled = true;
+
+      requestAnimationFrame(animate);
+    }
+
+    function finish() {
+      const adjusted = (rotation + Math.PI / 2) % (2 * Math.PI);
+      const norm = (2 * Math.PI - adjusted) % (2 * Math.PI);
+      const idx = Math.floor(norm / slice);
+      const prize = SEGMENTS[idx];
+
+      winSound.currentTime = 0;
+      winSound.play();
+
+      if (!prize.text.includes("Try Again")) {
+        rewardText.textContent = prize.text;
+        popup.classList.add("show");
+      } else {
+        result.textContent = "🙏 Try Again!";
+      }
+
+      spinBtn.disabled = false;
+    }
+
+    closeBtn.addEventListener("click", () => popup.classList.remove("show"));
+    spinBtn.addEventListener("click", startSpin);
+
+    draw(0);
+  }
+
+  document.readyState === "loading"
+    ? document.addEventListener("DOMContentLoaded", run)
+    : run();
+})();
+</script>
+
+</body>
+</html>
