@@ -4,48 +4,59 @@
   <meta charset="UTF-8">
   <title>Spin & Win Coaching @₹1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
     body {
       font-family: system-ui, sans-serif;
       background: #f5f7fa;
       margin: 0;
       padding: 20px;
+      text-align: center;
     }
-    #tb-spin * { box-sizing: border-box; }
+
     #tb-spin .tb-card {
       background:#fff;border-radius:20px;padding:28px 22px;
       box-shadow:0 18px 50px rgba(0,0,0,.12);
+      max-width: 600px;
+      margin: auto;
     }
+
     #tb-spin .tb-title {
       color:#0A5FFF;font:700 28px/1.2 system-ui; margin:4px 0 6px;
     }
+
     #tb-spin .tb-sub {
       color:#64748B;font:500 15px/1.6 system-ui;
     }
+
     #tb-spin .tb-wheel-wrap{
       position:relative;
-      width:min(520px,92vw);
-      height:min(520px,92vw);
+      width:520px;
+      height:520px;
       margin:20px auto;
     }
+
     #tb-spin canvas{
       display:block;margin:0 auto;
       filter:drop-shadow(0 8px 26px rgba(0,0,0,.15));
     }
+
     #tb-spin .tb-pointer{
-      position:absolute;left:50%;top:-14px;transform:translateX(-50%);
-      width:0;height:0;border-left:18px solid transparent;border-right:18px solid transparent;border-top:32px solid #e11d48;
-      filter:drop-shadow(0 2px 6px rgba(225,29,72,.35));z-index:2;
+      position:absolute;left:50%;top:-18px;transform:translateX(-50%);
+      width:0;height:0;border-left:20px solid transparent;border-right:20px solid transparent;border-top:35px solid #e11d48;
+      z-index:3;
     }
+
     #tb-spin .tb-btn {
       background:linear-gradient(135deg,#0A5FFF 0%,#0047CC 100%);
       color:#fff;border:none;border-radius:999px;padding:14px 38px;
-      font:800 18px/1 system-ui;letter-spacing:.2px;cursor:pointer;
-      box-shadow:0 8px 22px rgba(10,95,255,.35);transition:transform .15s ease,box-shadow .15s ease; margin-top:14px;
+      font:800 18px/1 system-ui;cursor:pointer;
+      box-shadow:0 8px 22px rgba(10,95,255,.35);
+      transition:.15s ease;
+      margin-top:20px;
     }
-    #tb-spin .tb-btn:hover:not([disabled]){transform:translateY(-1px);box-shadow:0 10px 28px rgba(10,95,255,.45);}
-    #tb-spin .tb-btn[disabled]{opacity:.55;cursor:not-allowed;}
-    #tb-spin .tb-result{min-height:26px;margin-top:12px;font:700 16px/1.4 system-ui}
+
+    #tb-spin .tb-btn:hover { transform:translateY(-2px); }
   </style>
 </head>
 
@@ -61,16 +72,17 @@
       <canvas id="tb-wheel" width="520" height="520"></canvas>
     </div>
 
-    <div style="text-align: center; margin-top: 20px;">
-      <button id="tb-spin-btn" class="tb-btn">🚀 Spin Now</button>
-    </div>
+    <button id="tb-spin-btn" class="tb-btn">🚀 Spin Now</button>
 
     <div id="tb-result" class="tb-result"></div>
   </div>
 </div>
 
-<audio id="spin-sound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-wheel-spin-2014.mp3"></audio>
-<audio id="win-sound" preload="auto" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2018.mp3"></audio>
+<audio id="spin-sound" preload="auto"
+  src="https://assets.mixkit.co/sfx/preview/mixkit-game-show-wheel-spin-2014.mp3"></audio>
+
+<audio id="win-sound" preload="auto"
+  src="https://assets.mixkit.co/sfx/preview/mixkit-winning-notification-2018.mp3"></audio>
 
 <script>
 (function () {
@@ -78,104 +90,98 @@
   const SEGMENTS = [
     { text: "🎓 Any Railway Exams", color: "#8B5CF6" },
     { text: "🎁 Any SSC Exams", color: "#EC4899" },
-    { text: "📚 Any Teaching Recruitment Exam", color: "#F59E0B" },
+    { text: "📚 Any Teaching Recruitment", color: "#F59E0B" },
     { text: "💰 Any Bihar Exam", color: "#10B981" },
-    { text: "✨ Any Banking Exam ", color: "#3B82F6" },
+    { text: "✨ Any Banking Exam", color: "#3B82F6" },
     { text: "🙏 Try Again", color: "#9CA3AF" }
   ];
 
-  function run() {
+  const canvas = document.getElementById("tb-wheel");
+  const ctx = canvas.getContext("2d");
 
-    const canvas = document.getElementById("tb-wheel"),
-          spinBtn = document.getElementById("tb-spin-btn"),
-          result = document.getElementById("tb-result"),
-          spinSound = document.getElementById("spin-sound"),
-          winSound = document.getElementById("win-sound");
+  const size = 520;
+  const radius = 220;
+  const cx = size / 2;
+  const cy = size / 2;
+  const slice = 2 * Math.PI / SEGMENTS.length;
 
-    const ctx = canvas.getContext("2d");
+  function draw(rotation = 0) {
+    ctx.clearRect(0, 0, size, size);
 
-    const size = 520;
-    const cx = size / 2;
-    const radius = 220;
-    const slice = 2 * Math.PI / SEGMENTS.length;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation);
 
-    function draw(rotation = 0) {
+    for (let i = 0; i < SEGMENTS.length; i++) {
 
-      ctx.clearRect(0,0,size,size);
+      const start = i * slice;
+      const end = start + slice;
 
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, radius, start, end);
+      ctx.closePath();
+      ctx.fillStyle = SEGMENTS[i].color;
+      ctx.fill();
+      ctx.strokeStyle = "#fff";
+      ctx.stroke();
+
+      // TEXT FIX: upright & centered
       ctx.save();
-      ctx.translate(cx,cx);
-      ctx.rotate(rotation);
+      ctx.rotate(start + slice / 2);
 
-      for(let i=0;i<SEGMENTS.length;i++){
+      ctx.font = "bold 18px sans-serif";
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
 
-        const start = i * slice;
-        const end = start + slice;
+      // Position text INSIDE neatly
+      const textX = radius * 0.60;   // inside correctly
+      const textY = 0;
 
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.arc(0,0,radius,start,end);
-        ctx.closePath();
-        ctx.fillStyle = SEGMENTS[i].color;
-        ctx.fill();
-        ctx.strokeStyle="#fff";
-        ctx.stroke();
+      // Split into 2 lines if needed
+      const lines = SEGMENTS[i].text.split(" ");
 
-        ctx.save();
-        ctx.rotate(start + slice/2);
-
-        ctx.fillStyle="#fff";
-        ctx.font = "bold 18px sans-serif";
-
-        const words = SEGMENTS[i].text.split(" ");
-        const lh = 18;
-
-        words.forEach((w,j)=>{
-          ctx.fillText(
-            w,
-            radius * 0.82,     // ⭐ Moved right (perfect for bigger wheel)
-            -lh * (words.length - j - 1)
-          );
-        });
-
-        ctx.restore();
+      if (lines.length <= 2) {
+        ctx.fillText(SEGMENTS[i].text, textX, textY);
+      } else {
+        ctx.fillText(lines.slice(0,2).join(" "), textX, textY - 10);
+        ctx.fillText(lines.slice(2).join(" "), textX, textY + 14);
       }
 
       ctx.restore();
     }
 
-    let rotation = 0, velocity = 0, spinning = false;
-
-    function animate(){
-      if(!spinning) return;
-      rotation += velocity * Math.PI/180;
-      velocity *= 0.984;
-      if(velocity < 0.02){
-        spinning = false;
-      } else {
-        requestAnimationFrame(animate);
-      }
-      draw(rotation);
-    }
-
-    spinBtn.addEventListener("click",()=>{
-
-      if(spinning) return;
-      spinning = true;
-
-      spinSound.currentTime=0;
-      spinSound.play();
-
-      velocity = 45 + Math.random()*5;
-
-      requestAnimationFrame(animate);
-    });
-
-    draw(0);
+    ctx.restore();
   }
 
-  document.readyState === "loading" ?
-    document.addEventListener("DOMContentLoaded", run) : run();
+  // SPIN PHYSICS
+  let rotation = 0, velocity = 0, spinning = false;
+
+  function animate() {
+    if (!spinning) return;
+    rotation += velocity * Math.PI / 180;
+    velocity *= 0.985;
+
+    if (velocity < 0.02) {
+      spinning = false;
+    } else {
+      requestAnimationFrame(animate);
+    }
+    draw(rotation);
+  }
+
+  document.getElementById("tb-spin-btn").onclick = () => {
+    if (spinning) return;
+    spinning = true;
+
+    document.getElementById("spin-sound").play();
+
+    velocity = 45 + Math.random() * 5;
+
+    requestAnimationFrame(animate);
+  };
+
+  draw(0);
 
 })();
 </script>
